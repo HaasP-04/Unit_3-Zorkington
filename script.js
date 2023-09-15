@@ -13,24 +13,27 @@
             - use your browsers console throughout testing.
 */
 
-export const gameDetails = {   
-    title: 'Game Title',
-    desc: 'Welcome to the world of... here are some quick rules & concepts...',
-    author: 'Student Name',
-    cohort: 'SBPT-2022',
-    startingRoomDescription: 'What you see before you is...',
-    playerCommands: [
-        // replace these with your games commands as needed
-        'inspect', 'view', 'look', 'pickup',
-    ]
-    // Commands are basic things that a player can do throughout the game besides possibly moving to another room. This line will populate on the footer of your game for players to reference. 
-    // This shouldn't be more than 6-8 different commands.
-}
+export const gameDetails = {
+  title: "Unit 3 Zorkington Project",
+  desc: "Welcome to the world of... here are some quick rules & concepts...",
+  author: "Hasan Pringle",
+  cohort: "SBPT-2023",
+  startingRoomDescription: "What you see before you is...",
+  playerCommands: [
+    // replace these with your games commands as needed
+    "inspect",
+    "view",
+    "look",
+    "pickup",
+  ],
+  // Commands are basic things that a player can do throughout the game besides possibly moving to another room. This line will populate on the footer of your game for players to reference.
+  // This shouldn't be more than 6-8 different commands.
+};
 
 // Your code here
 
 export const domDisplay = (playerInput) => {
-    /* 
+  /* 
         TODO: for students
         - This function must return a string. 
         - This will be the information that is displayed within the browsers game interface above the users input field.
@@ -61,5 +64,63 @@ export const domDisplay = (playerInput) => {
                     - What is the process of picking up an item exactly? ex: Look. Pick from a list of items. Put into players list of items... 
     */
 
-    // Your code here
-} 
+  // Your code here
+
+  let gameDetails = {
+    currentRoom: "start",
+    inventory: [],
+    rooms: {
+      start: {
+        description:["You are in a dark room. There is a door to the north."],
+        items: ["key"],
+        exits: { north: "hallway" },
+      },
+      hallway: {
+        description:
+         ["You are in a long hallway. There is a door to the south and east."],
+        items: ["candle"],
+        exits: { south: "start", east: "office" },
+      },
+      office: {
+        description: ["You found the office!"],
+        items: ["pen"],
+        exits: { west: "hallway" },
+      },
+    },
+  };
+  const domDisplay = (playerInput) => {
+    let input = playerInput;
+    let command = input[0];
+    let option = input[1];
+
+    switch (command) {
+      case "look":
+        if (gameDetails.rooms[gameDetails.currentRoom].exits[option]) {
+          gameDetails.currentRoom =
+            gameDetails.rooms[gameDetails.currentRoom].exits[option];
+          return;
+          gameDetails.rooms[gameDetails.currentRoom].description;
+        } else {
+          return "You cannot go that way.";
+        }
+      case "inspect":
+        return;
+        gameDetails.rooms[gameDetails.currentRoom].description;
+      case "pickup":
+        if (gameDetails.rooms[gameDetails.currentRoom].items.includes(option)) {
+          gameDetails.inventory.push(option);
+          gameDetails.rooms[gameDetails.currentRoom].items = gameDetails.rooms[
+            gameDetails.currentRoom
+          ].items.filter((item) => item !== option);
+          return `You picked up the ${option}.`;
+        } else {
+          return "That item is not here.";
+        }
+      case "inventory":
+        return `You are holding: ${gameDetails.inventory.join(", ")}`;
+      default:
+        return "Invalid command.";
+    };
+  };
+  gameDetails();
+};
