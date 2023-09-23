@@ -33,8 +33,9 @@ export const gameDetails = {
 
 // Your code here
 class Room {
-  constructor({description, items, exits}) {
+  constructor({description, view, items, exits}) {
     this.description = description;
+    this.view = view;
     this.items = items;
     this.exits = exits;
   }
@@ -43,20 +44,51 @@ class Room {
 const hallway = new Room({
   description:
     "You are in a long hallway. There is a door to the south and east.",
-  items: ["candel"],
+  items: ["candel", "light switch"],
   exits: ["office"],
 });
 
 const office = new Room({
   description: "You found the office!",
-  items: ["pen"],
+  items: ["pen", "desk"],
   exits: ["hallway"],
 });
 
-const roomDic = {
+const bedroom = new Room({
+  description: "You found the bedroom!",
+  items: ["bed", "pillow"],
+  exits:["hallway, bathroom"],
+});
+
+const bathroom = new Room({
+  description: "You found the bathroom",
+  items: ["toothrush, toliet"],
+  exits: ["bedroom"],
+});
+
+const roomDict = {
   "office": office,
   "hallway": hallway,
+  "bedroom": bedroom,
+  "bathroom": bathroom,
 }
+
+class Item {
+  constructor({inspect, pickup}) {
+    this.inspect = inspect;
+    this.pickup = pickup;
+  }
+}
+
+const itemDict = (
+  "candel": candel,
+  "pen": pen, 
+  "desk": desk,
+  "bed" : bed,
+  "pillow": pill,
+  "toothbrush": toothbrush,
+  "toliet": toliet,
+)
 
 let currentLocation = hallway;
 console.log(currentLocation.description);
@@ -71,11 +103,17 @@ export const domDisplay = (playerInput) => {
   //* if option is possible excucute some code 
 console.log(currentLocation);
   if (command === "enter" && currentLocation.exits.includes(option)){
-      currentLocation = roomDic[option] 
+      currentLocation = roomDict[option] 
       
     return(currentLocation.description)
   } else {
     return (" No where to go")
+  }
+
+  let state = {
+    hallway: ['office'],
+    office: ['hallway'],
+
   }
 
   /* 
@@ -147,5 +185,3 @@ console.log(currentLocation);
 //       return "Invalid command.";
 //   };
 // };
-// //? this is an object not an function
-// gameDetails();
