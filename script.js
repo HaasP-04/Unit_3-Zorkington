@@ -18,7 +18,7 @@ export const gameDetails = {
   desc: "Welcome to the world of... here are some quick rules & concepts...",
   author: "Hasan Pringle",
   cohort: "SBPT-2023",
-  startingRoomDescription: "What you see before you is...",
+  startingRoomDescription: "Game started, you are now in the Hallway, from here you can enter the office",
   playerCommands: [
     // replace these with your games commands as needed
     "inspect",
@@ -73,23 +73,55 @@ const roomDict = {
   "bathroom": bathroom,
 }
 
+// Creating Item Class
 class Item {
-  constructor({inspect, pickup}) {
-    this.inspect = inspect;
-    this.pickup = pickup;
+  constructor({itemDescription, move}) {
+    this.itemDescription = itemDescription;
+    this.move = move;
   }
 }
 
-const itemDict = (
+const candel = new Item({
+  itemDescription: "You picked up a candel",
+  move: true,
+})
+
+const pen =new Item({
+  itemDescription: "You picked up a pen",
+  move: true,
+})
+const desk =new Item({
+  itemDescription: "You found the desk",
+  move: false,
+})
+const bed =new Item({
+  itemDescription: "You found the bed",
+  move: false,
+})
+const pillow =new Item({
+  itemDescription: "You picked up a piilow",
+  move: true,
+})
+const toothbrush =new Item({
+  itemDescription: "You picked up a toothbrush",
+  move: true,
+})
+const toliet =new Item({
+  itemDescription: "You found a toliet",
+  move: false,
+})
+
+// Creating Items
+const itemDict = {
   "candel": candel,
   "pen": pen, 
   "desk": desk,
   "bed" : bed,
-  "pillow": pill,
+  "pillow": pillow,
   "toothbrush": toothbrush,
   "toliet": toliet,
-)
-
+}
+console.log(itemDict)
 let currentLocation = hallway;
 console.log(currentLocation.description);
 
@@ -110,11 +142,6 @@ console.log(currentLocation);
     return (" No where to go")
   }
 
-  let state = {
-    hallway: ['office'],
-    office: ['hallway'],
-
-  }
 
   /* 
         TODO: for students
