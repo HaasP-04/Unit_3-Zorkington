@@ -19,19 +19,12 @@ export const gameDetails = {
   author: "Hasan Pringle",
   cohort: "SBPT-2023",
   startingRoomDescription: "Game started, you are now in the Hallway, from here you can enter the office",
-  playerCommands: [
-    // replace these with your games commands as needed
-    "inspect",
-    "view",
-    "look",
-    "pickup",
-    "enter",
-  ],
-  // Commands are basic things that a player can do throughout the game besides possibly moving to another room. This line will populate on the footer of your game for players to reference.
-  // This shouldn't be more than 6-8 different commands.
+  playerCommands: ["inspect", "view", "look", "pickup", "enter"],
 };
+ /* Commands are basic things that a player can do throughout the game besides possibly moving to another room. This line will populate on the footer of your game for players to reference.
+  This shouldn't be more than 6-8 different commands.*/
 
-// Your code here
+//? Your code here
 class Room {
   constructor({description, view, items, exits}) {
     this.description = description;
@@ -39,12 +32,19 @@ class Room {
     this.items = items;
     this.exits = exits;
   }
+
+  displayItems() {
+    if (this.items.length > 0) {
+      return `Items in the room: ${this.items.join(", ")}`;
+    } else {
+      return "No items in the room.";
+    }
+  }
 }
 
 const hallway = new Room({
-  description:
-    "You are in a long hallway. There is a door to the south and east.",
-  items: ["candel", "light switch"],
+  description: "You are in a long hallway. There is a door to the south and east.",
+  items: ["candle", "light switch"],
   exits: ["office"],
 });
 
@@ -57,12 +57,12 @@ const office = new Room({
 const bedroom = new Room({
   description: "You found the bedroom!",
   items: ["bed", "pillow"],
-  exits:["hallway, bathroom"],
+  exits: ["hallway", "bathroom"],
 });
 
 const bathroom = new Room({
   description: "You found the bathroom",
-  items: ["toothrush, toliet"],
+  items: ["toothbrush", "toilet"],
   exits: ["bedroom"],
 });
 
@@ -71,9 +71,8 @@ const roomDict = {
   "hallway": hallway,
   "bedroom": bedroom,
   "bathroom": bathroom,
-}
+};
 
-// Creating Item Class
 class Item {
   constructor({itemDescription, move}) {
     this.itemDescription = itemDescription;
@@ -81,46 +80,61 @@ class Item {
   }
 }
 
-const candel = new Item({
-  itemDescription: "You picked up a candel",
+const candle = new Item({
+  itemDescription: "You picked up a candle",
   move: true,
-})
+});
 
-const pen =new Item({
+const pen = new Item({
   itemDescription: "You picked up a pen",
   move: true,
-})
-const desk =new Item({
+});
+
+const desk = new Item({
   itemDescription: "You found the desk",
   move: false,
-})
-const bed =new Item({
+});
+
+const bed = new Item({
   itemDescription: "You found the bed",
   move: false,
-})
-const pillow =new Item({
-  itemDescription: "You picked up a piilow",
+});
+
+const pillow = new Item({
+  itemDescription: "You picked up a pillow",
   move: true,
-})
-const toothbrush =new Item({
+});
+
+const toothbrush = new Item({
   itemDescription: "You picked up a toothbrush",
   move: true,
-})
-const toliet =new Item({
-  itemDescription: "You found a toliet",
-  move: false,
-})
+});
 
-// Creating Items
+const toilet = new Item({
+  itemDescription: "You found a toilet",
+  move: false,
+});
+
+//? Creating Items
 const itemDict = {
-  "candel": candel,
-  "pen": pen, 
+  "candle": candle,
+  "pen": pen,
   "desk": desk,
-  "bed" : bed,
+  "bed": bed,
   "pillow": pillow,
   "toothbrush": toothbrush,
-  "toliet": toliet,
-}
+  "toilet": toilet,
+};
+
+console.log(itemDict);
+
+let currentLocation = hallway;
+
+
+let playerInventory = [];
+const visitedRooms = [];
+
+
 console.log(itemDict)
 let currentLocation = hallway;
 console.log(currentLocation.description);
@@ -130,9 +144,9 @@ export const domDisplay = (playerInput) => {
     let command = input[0];
     let option = input[1];
   
-  //* check player command
-  //* if player command is possible check option 
-  //* if option is possible excucute some code 
+//   //* check player command
+//   //* if player command is possible check option 
+//   //* if option is possible excucute some code 
 console.log(currentLocation);
   if (command === "enter" && currentLocation.exits.includes(option)){
       currentLocation = roomDict[option] 
@@ -174,41 +188,65 @@ console.log(currentLocation);
                     - What is the process of picking up an item exactly? ex: Look. Pick from a list of items. Put into players list of items... 
     */
 
-  // Your code here
+  //? Your code here
 };
 
 //! Start of gameplay function
-// const domDisplay = (playerInput) => {
-//   let input = playerInput;
-//   let command = input[0];
-//   let option = input[1];
+ const domDisplay = (playerInput) => {
+  let input = playerInput.split(" ");
+  let command = input[0];
+  let option = input[1];
 
-//   switch (command) {
-//     case "look":
-//       if (gameDetails.rooms[gameDetails.currentRoom].exits[option]) {
-//         gameDetails.currentRoom =
-//           gameDetails.rooms[gameDetails.currentRoom].exits[option];
-//         return;
-//         gameDetails.rooms[gameDetails.currentRoom].description;
-//       } else {
-//         return "You cannot go that way.";
-//       }
-//     case "inspect":
-//       return;
-//       gameDetails.rooms[gameDetails.currentRoom].description;
-//     case "pickup":
-//       if (gameDetails.rooms[gameDetails.currentRoom].items.includes(option)) {
-//         gameDetails.inventory.push(option);
-//         gameDetails.rooms[gameDetails.currentRoom].items = gameDetails.rooms[
-//           gameDetails.currentRoom
-//         ].items.filter((item) => item !== option);
-//         return `You picked up the ${option}.`;
-//       } else {
-//         return "That item is not here.";
-//       }
-//     case "inventory":
-//       return `You are holding: ${gameDetails.inventory.join(", ")}`;
-//     default:
-//       return "Invalid command.";
-//   };
-// };
+  if (!playerInput) {
+    return "Welcome to Zorkington! Explore and have fun!";
+  }
+
+  if (visitedRooms.length === Object.keys(roomDict).length) {
+    return "Congratulations! You have completed the game.";
+  }
+
+  if (command === "enter" && currentLocation.exits.includes(option)) {
+    currentLocation = roomDict[option];
+    visitedRooms.push(option);
+    return currentLocation.description;
+  } else if (command === "look") {
+    return `${currentLocation.description}\n${currentLocation.displayItems()}`;
+  } else if (command === "pickup" && currentLocation.items.includes(option)) {
+    const item = itemDict[option];
+    currentLocation.items = currentLocation.items.filter((i) => i !== option);
+    playerInventory.push(option);
+    return `${item.itemDescription}\n${currentLocation.displayItems()}`;
+  } else if (command === "inspect" && option === "exits") {
+    return `Available exits: ${currentLocation.exits.join(", ")}`;
+  } else if (command === "drop" && playerInventory.includes(option)) {
+    const item = itemDict[option];
+    currentLocation.items.push(option);
+    playerInventory = playerInventory.filter((i) => i !== option);
+    return `You dropped ${item.itemDescription}\n${currentLocation.displayItems()}`;
+  } else {
+    return "Invalid command or option.";
+  }
+};
+
+// your-game-file.js
+
+function initializeGame() {
+  // Set the initial room when the game starts
+  currentLocation = hallway;
+
+}
+
+initializeGame();
+// Import necessary functions and variables from your game logic
+
+function processInput() {
+  const userInput = document.getElementById('user-input').value;
+  const outputElement = document.getElementById('room-display-container');
+  const result = domDisplay(userInput);
+  outputElement.textContent = result;
+
+  // You might want to clear the input field after processing
+  document.getElementById('user-input').value = '';
+}
+
+processInput();
